@@ -13,13 +13,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @ComponentScan(basePackages = {"ru.kurma"})
 public class WebConfig implements WebMvcConfigurer {
 
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/users/**")
-//                .addResourceLocations("/")
-//                .setCachePeriod(31556926);
-//    }
-
     @Bean
     InternalResourceViewResolver viewResolver() {
         InternalResourceViewResolver resolver =
