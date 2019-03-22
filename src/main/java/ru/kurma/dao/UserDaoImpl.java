@@ -36,8 +36,7 @@ public class UserDaoImpl implements UserDao {
         Query query = (Query) entityManager.createQuery("select e from User e where e.login = :login");
         query.setParameter("login", login);
         List<User> users = query.getResultList();
-        User user = users.get(0);
-        return user;
+        return users.size() == 0?null:users.get(0);
     }
 
     @Override
@@ -59,52 +58,4 @@ public class UserDaoImpl implements UserDao {
         entityManager.remove(findUserById(id));
 
     }
-
-
-//    @Override
-//    public User findUserById(Integer id) {
-//        User user;
-//        Session session = sessionFactory.openSession();
-//        user = session.get(User.class, id);
-//        session.close();
-//        return user;
-//    }
-//
-//
-//    @Override
-//    public User findUserByLogin(String login) {
-//        Session session = sessionFactory.openSession();
-//        Query query = session.createQuery("From User where login = :login");
-//        query.setParameter("login", login);
-//        List<User> list = query.list();
-//        if (list.size() == 0) {
-//            return null;
-//        }
-//        else return list.get(0);
-//    }
-//
-//    @Override
-//    @Transactional
-//    public void createNewUser(String firstName, String lastName, String login, String password, String role){
-//        Session session = sessionFactory.openSession();
-//        session.save(new User(firstName, lastName, login, password, role));
-//        session.close();
-//    }
-//
-//    @Override
-//    @Transactional
-//    public void updateUser(User user) {
-//        Session session = sessionFactory.openSession();
-//        session.update(user);
-//        session.close();
-//    }
-//
-//    @Override
-//    @Transactional
-//    public void deleteUser(Integer id) {
-//        User user = findUserById(id);
-//        Session session = sessionFactory.openSession();
-//        session.delete(user);
-//        session.close();
-//    }
 }
