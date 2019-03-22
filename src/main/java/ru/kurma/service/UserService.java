@@ -1,6 +1,5 @@
 package ru.kurma.service;
 
-import org.springframework.stereotype.Service;
 import ru.kurma.model.User;
 
 import java.util.List;
