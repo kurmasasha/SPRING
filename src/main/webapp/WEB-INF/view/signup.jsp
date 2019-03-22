@@ -4,7 +4,7 @@
     <title>UserAdd</title>
 </head>
 <body>
-<h1>Зарегистрируйтесь</h1>
+<h2>Sign up</h2>
     <form method="post" action="/signup" accept-charset="UTF-8">
         <table>
             <tr>
@@ -20,9 +20,6 @@
 
             </tr>
         </table>
-    </form>
-    <form action="/home">
-        <input type="submit" value="Отмена">
     </form>
 </body>
 </html>

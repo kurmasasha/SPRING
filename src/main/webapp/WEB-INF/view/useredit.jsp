@@ -9,7 +9,7 @@
     <table>
         <tr>
             <td>
-                <h1>Внесите изменения</h1>
+                <h2>User edit</h2>
             </td>
         </tr>
         <tr>
