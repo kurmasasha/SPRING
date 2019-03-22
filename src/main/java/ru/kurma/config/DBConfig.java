@@ -1,6 +1,6 @@
 package ru.kurma.config;
 
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -36,9 +36,11 @@ public class DBConfig {
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean =
                 new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
-        entityManagerFactoryBean.setPackagesToScan("ru.kurma.model");
+        entityManagerFactoryBean.setPackagesToScan("ru.kurma");
+        entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-        adapter.setDatabase(Database.POSTGRESQL);
+        //adapter.setDatabase(Database.POSTGRESQL);
+
         entityManagerFactoryBean.setJpaVendorAdapter(adapter);
         entityManagerFactoryBean.setJpaProperties(hibernateProperties());
         return entityManagerFactoryBean;
@@ -47,7 +49,7 @@ public class DBConfig {
 
     private Properties hibernateProperties() {
         Properties hibernateProp = new Properties();
-        hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL95Dialect");
         hibernateProp.put("hibernate.show_sql", "true");
         hibernateProp.put("hibernate.hbm2ddl.auto", "update");
         return hibernateProp;
@@ -64,9 +66,9 @@ public class DBConfig {
 //    }
 
     @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+    public JpaTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory);
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
         return transactionManager;
     }
 

@@ -1,16 +1,11 @@
 package ru.kurma.dao;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kurma.model.User;
-
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
@@ -19,7 +14,7 @@ public class UserDaoImpl implements UserDao {
 
     @Autowired
     @PersistenceContext
-    @Qualifier("entityManagerFactory")
+    //@Qualifier("entityManagerFactory")
     private EntityManager entityManager;
     //private SessionFactory sessionFactory;
 
@@ -33,26 +28,35 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findUserById(Integer id) {
-        return null;
+        return entityManager.find(User.class, id);
     }
 
     @Override
     public User findUserByLogin(String login) {
-        return null;
+        Query query = (Query) entityManager.createQuery("select e from User e where e.login = :login");
+        query.setParameter("login", login);
+        List<User> users = query.getResultList();
+        User user = users.get(0);
+        return user;
     }
 
     @Override
+    @Transactional
     public void createNewUser(String firstName, String lastName, String login, String password, String role) throws Exception {
-
+        entityManager.persist(new User(firstName, lastName, login, password, role));
     }
 
     @Override
+    @Transactional
     public void updateUser(User user) {
+        entityManager.merge(user);
 
     }
 
     @Override
+    @Transactional
     public void deleteUser(Integer id) {
+        entityManager.remove(findUserById(id));
 
     }
 
