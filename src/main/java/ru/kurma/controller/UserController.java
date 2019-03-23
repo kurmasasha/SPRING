@@ -59,7 +59,7 @@ public class UserController {
             return "redirect:/signin";
         }
         if ((user.getLogin().equals(login)) && (user.getPassword().equals(password))) {
-            return "regirect:/home";
+            return "redirect:/home";
         }
         else return "redirect:/signin";
     }

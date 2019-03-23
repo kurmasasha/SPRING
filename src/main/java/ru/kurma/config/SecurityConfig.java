@@ -7,6 +7,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import ru.kurma.security.AuthenticationProviderImpl;
 
 @Configuration
@@ -21,24 +25,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.authenticationProvider = authenticationProvider;
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/signup", "/signin").permitAll()
-                .anyRequest().authenticated()
+                //.antMatchers("/","/signup", "/signin").permitAll()
+                .antMatchers("/admin/**").hasRole("admin")
+                .antMatchers("/**").hasAnyRole("admin", "user")
                 .and()
-                .csrf().disable()
                 .formLogin()
                 .loginPage("/signin")
                 .usernameParameter("login")
                 .permitAll()
                 .and()
-                .logout()
-                .permitAll();
+                .logout().logoutSuccessUrl("/login").permitAll()
+                .and().csrf().disable();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authenticationProvider);
     }
+
+
 }
