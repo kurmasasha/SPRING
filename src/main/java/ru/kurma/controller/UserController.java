@@ -21,44 +21,82 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/users")
+    @GetMapping("/admin/users")
     public String viewAllUsers(Model model) {
         List<User> userList = userService.findAllUsers();
         model.addAttribute("userList", userList);
-        return "/users";
+        return "/admin/users";
     }
 
     @GetMapping("/signup")
     public String addUser() {
-        return "/signup";
+        return "/login/signup";
     }
 
     @PostMapping("/signup")
-    public String addUser(@RequestParam String firstName, @RequestParam String lastName) throws Exception {
-        userService.createNewUser(firstName, lastName, null, null, null);
-        return "redirect:/users";
+    public String signUp(@RequestParam String firstName,
+                          @RequestParam String lastName,
+                          @RequestParam String login,
+                          @RequestParam String password) {
+        try {
+            userService.createNewUser(firstName, lastName, login, password, "user");
+            return "redirect:/home";
+        } catch (Exception e) {
+            return "/login/errorsignup";
+        }
+
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/signin")
+    public String signIn() {
+        return "/login/signin";
+    }
+
+    @PostMapping("/signin")
+    public String signIn(@RequestParam String login, @RequestParam String password) {
+        User user = userService.findUserByLogin(login);
+        if (user == null) {
+            return "redirect:/signin";
+        }
+        if ((user.getLogin().equals(login)) && (user.getPassword().equals(password))) {
+            return "regirect:/home";
+        }
+        else return "redirect:/signin";
+    }
+
+    @GetMapping("/admin/edit")
     public String userEdit(@RequestParam Integer id, Model uiModel) {
         this.id = id;
         User user = userService.findUserById(id);
         uiModel.addAttribute("user", user);
-        return "/useredit";
+        return "/admin/useredit";
     }
 
-    @PostMapping("/edit")
-    public String userEdit(@RequestParam String firstName, @RequestParam String lastName) {
+    @PostMapping("/admin/edit")
+    public String userEdit(@RequestParam String firstName,
+                           @RequestParam String lastName,
+                           @RequestParam String role) {
         User user1 = userService.findUserById(id);
         user1.setFirstName(firstName);
         user1.setLastName(lastName);
+        user1.setRole(role);
         userService.updateUser(user1);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
-    @GetMapping("delete")
+    @GetMapping("/admin/delete")
     public String deleteUser(@RequestParam Integer id) {
         userService.deleteUser(id);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
+
+    @GetMapping("/home")
+    public String home() {
+        return "/user/home";
+    }
+
+//    @GetMapping("/admin/adminhome")
+//    public String adminHome() {
+//        return "admin/adminhome";
+//    }
 }

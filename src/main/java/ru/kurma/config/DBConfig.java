@@ -39,8 +39,6 @@ public class DBConfig {
         entityManagerFactoryBean.setPackagesToScan("ru.kurma");
         entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
-        //adapter.setDatabase(Database.POSTGRESQL);
-
         entityManagerFactoryBean.setJpaVendorAdapter(adapter);
         entityManagerFactoryBean.setJpaProperties(hibernateProperties());
         return entityManagerFactoryBean;

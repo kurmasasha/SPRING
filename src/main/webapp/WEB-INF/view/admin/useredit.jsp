@@ -5,11 +5,11 @@
     <title>UserEdit</title>
 </head>
 <body>
-<form method="post" action="/edit" accept-charset="UTF-8">
+<form method="post" action="/admin/edit" accept-charset="UTF-8">
     <table>
         <tr>
             <td>
-                <h2>User edit</h2>
+                <h1>Внесите изменения</h1>
             </td>
         </tr>
         <tr>
@@ -22,7 +22,7 @@
         </tr>
         <tr>
             <td><label for="Role">Текущая Роль</label></td>
-            <td><select name="Role" id="Role">
+            <td><select name="role" id="Role">
                 <option value="admin">admin</option>
                 <option value="user">user</option>
             </select> </td>

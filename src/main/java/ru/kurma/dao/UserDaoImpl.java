@@ -14,9 +14,7 @@ public class UserDaoImpl implements UserDao {
 
     @Autowired
     @PersistenceContext
-    //@Qualifier("entityManagerFactory")
     private EntityManager entityManager;
-    //private SessionFactory sessionFactory;
 
     @Override
     public List<User> findAllUsers() {
