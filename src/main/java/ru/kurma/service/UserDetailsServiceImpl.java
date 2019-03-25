@@ -13,19 +13,12 @@ import ru.kurma.model.User;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         User user = userService.findUserByLogin(login);
         GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
-        UserDetails userDetails = new User(user.getFirstName()
-                , user.getLastName()
-                , user.getLogin()
-                , user.getPassword()
-                , user.getRole());
-
-
-        return userDetails;
+        return user;
     }
 }

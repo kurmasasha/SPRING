@@ -9,21 +9,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import ru.kurma.service.UserDetailsServiceImpl;
 import ru.kurma.service.UserService;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan("ru.kurma.security")
+@ComponentScan("ru.kurma.service")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final AuthenticationProvider authenticationProvider;
-
-    @Autowired
-    public SecurityConfig(AuthenticationProvider authenticationProvider) {
-        this.authenticationProvider = authenticationProvider;
-    }
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -33,12 +27,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                     .antMatchers("/admin/**").hasAuthority("admin")
-                    .antMatchers("/signup/**", "/signin/**").permitAll()
                     .antMatchers("/home/**").authenticated()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
-                    .defaultSuccessUrl("/home")
                     .loginPage("/signin")
                     .usernameParameter("login");
                 http.csrf().disable();
@@ -46,7 +38,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        //auth.authenticationProvider(authenticationProvider);
-        auth.userDetailsService(userDetailsService);
+        auth.userDetailsService(userDetailsService).passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
 }
