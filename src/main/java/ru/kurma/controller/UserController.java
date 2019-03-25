@@ -1,35 +1,47 @@
 package ru.kurma.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.kurma.model.User;
 import ru.kurma.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@RequestMapping("/")
 @Controller
 public class UserController {
 
     private Integer id;
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/")
+    public String getHomePage() {
+        return "redirect:/home";
+    }
 
     @GetMapping("/admin/users")
     public String viewAllUsers(Model model) {
-        List<User> userList = userService.findAllUsers();
-        model.addAttribute("userList", userList);
+        model.addAttribute("userList", userService.findAllUsers());
         return "/admin/users";
     }
 
     @GetMapping("/signup")
-    public String addUser() {
+    public String addUser(Authentication authentication) {
+        if (authentication != null) {
+            return "redirect:/";
+        }
         return "/login/signup";
     }
 
@@ -48,20 +60,14 @@ public class UserController {
     }
 
     @GetMapping("/signin")
-    public String signIn() {
+    public String signIn(Authentication authentication, Model model, HttpServletRequest request) {
+        if (request.getParameterMap().containsKey("error")) {
+            model.addAttribute("error", true);
+        }
+        if (authentication != null) {
+            return "redirect:/";
+        }
         return "/login/signin";
-    }
-
-    @PostMapping("/signin")
-    public String signIn(@RequestParam String login, @RequestParam String password) {
-        User user = userService.findUserByLogin(login);
-        if (user == null) {
-            return "redirect:/signin";
-        }
-        if ((user.getLogin().equals(login)) && (user.getPassword().equals(password))) {
-            return "redirect:/home";
-        }
-        else return "redirect:/signin";
     }
 
     @GetMapping("/admin/edit")
@@ -91,12 +97,17 @@ public class UserController {
     }
 
     @GetMapping("/home")
-    public String home() {
+    public String home(Authentication authentication) {
+
+        List<GrantedAuthority> autoritis = (List<GrantedAuthority>) authentication.getAuthorities();
+        if("admin".equals(autoritis.get(0).getAuthority())) {
+            return "redirect:/admin/adminhome";
+        }
         return "/user/home";
     }
 
-//    @GetMapping("/admin/adminhome")
-//    public String adminHome() {
-//        return "admin/adminhome";
-//    }
+    @GetMapping("/admin/adminhome")
+    public String adminHome() {
+        return "/admin/adminhome";
+    }
 }

@@ -6,12 +6,16 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
 <html>
 <head>
     <title>Login</title>
 </head>
 <body>
 <h1>Введите логин и пароль</h1>
+<h4>
+    <c:if test="${error}">Логин или пароль введены неверно</c:if>
+</h4>
     <form method="post" action="/signin" accept-charset="UTF-8">
         <table>
             <tr>

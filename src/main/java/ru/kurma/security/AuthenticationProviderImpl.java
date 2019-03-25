@@ -7,6 +7,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import ru.kurma.model.User;
@@ -27,10 +28,9 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
     }
 
     @Override
-
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String login = authentication.getName();
-        User user = userService.findUserByLogin(login);
+
+        User user = userService.findUserByLogin(authentication.getName());
         if (user == null) {
             throw new UsernameNotFoundException("User Not Found");
         }
@@ -39,12 +39,13 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
             throw new BadCredentialsException("Bad credentials");
         }
         List<GrantedAuthority> authorities = new ArrayList<>();
-        return new UsernamePasswordAuthenticationToken(user, null, authorities);
-
+        authorities.add(new SimpleGrantedAuthority(user.getRole()));
+        return new UsernamePasswordAuthenticationToken(user, password, authorities);
     }
 
     @Override
     public boolean supports(Class<?> aClass) {
         return aClass.equals(UsernamePasswordAuthenticationToken.class);
     }
+
 }

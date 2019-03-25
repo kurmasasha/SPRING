@@ -10,7 +10,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"ru.kurma"})
+@ComponentScan(basePackages = {"ru.kurma.config"})
 public class WebConfig implements WebMvcConfigurer {
 
     @Bean
