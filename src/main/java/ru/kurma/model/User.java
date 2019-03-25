@@ -5,6 +5,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users", schema = "test")
@@ -76,7 +78,10 @@ public class User implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+
+        Set<GrantedAuthority> roles = new HashSet<>();
+        roles.add(new Role("admin"));
+        return roles;
     }
 
     public String getPassword() {
@@ -85,7 +90,7 @@ public class User implements UserDetails{
 
     @Override
     public String getUsername() {
-        return null;
+        return login;
     }
 
     @Override
