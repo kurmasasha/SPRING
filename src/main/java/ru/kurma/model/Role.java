@@ -3,6 +3,7 @@ package ru.kurma.model;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "role", schema = "test")
@@ -13,16 +14,25 @@ public class Role implements GrantedAuthority {
     private Integer id;
     @Column(name = "role")
     private String role;
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, optional = true)
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "role_id")
             , inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private User user;
+    private Set<User> users;
 
     public Role() {
     }
 
     public Role(String role) {
         this.role = role;
+
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public Integer getId() {
