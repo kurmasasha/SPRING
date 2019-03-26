@@ -4,10 +4,12 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kurma.model.Role;
 import ru.kurma.model.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -33,13 +35,13 @@ public class UserDaoImpl implements UserDao {
     public User findUserByLogin(String login) {
         Query query = (Query) entityManager.createQuery("select e from User e where e.login = :login");
         query.setParameter("login", login);
-        List<User> users = query.getResultList();
-        return users.size() == 0?null:users.get(0);
+        return (User) query.getSingleResult();
+
     }
 
     @Override
     @Transactional
-    public void createNewUser(String firstName, String lastName, String login, String password, String role) throws Exception {
+    public void createNewUser(String firstName, String lastName, String login, String password, Set<Role> role) {
         entityManager.persist(new User(firstName, lastName, login, password, role));
     }
 
@@ -54,6 +56,5 @@ public class UserDaoImpl implements UserDao {
     @Transactional
     public void deleteUser(Integer id) {
         entityManager.remove(findUserById(id));
-
     }
 }

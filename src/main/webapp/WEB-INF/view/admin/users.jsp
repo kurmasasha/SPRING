@@ -21,7 +21,10 @@
                 <td>${user.firstName}</td>
                 <td>${user.lastName}</td>
                 <td>${user.login}</td>
-                <td>${user.role}</td>
+                <c:forEach items="#{user.roles}" var="role">
+                    <td>${role.authority}</td>
+                </c:forEach>
+
                 <td>
                     <a href="/admin/edit?id=${user.id}">Редактировать</a>
                 </td>

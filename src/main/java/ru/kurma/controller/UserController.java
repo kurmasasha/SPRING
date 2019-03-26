@@ -8,11 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.kurma.model.Role;
 import ru.kurma.model.User;
 import ru.kurma.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class UserController {
@@ -39,9 +42,9 @@ public class UserController {
 
     @GetMapping("/signup")
     public String addUser(Authentication authentication) {
-        if (authentication != null) {
-            return "redirect:/";
-        }
+//        if (authentication != null) {
+//            return "redirect:/";
+//        }
         return "/login/signup";
     }
 
@@ -49,13 +52,16 @@ public class UserController {
     public String signUp(@RequestParam String firstName,
                           @RequestParam String lastName,
                           @RequestParam String login,
-                          @RequestParam String password) {
-        try {
-            userService.createNewUser(firstName, lastName, login, password, "user");
+                          @RequestParam String password) throws Exception {
+
+        Set<Role> role = new HashSet<>();
+        role.add(new Role("user"));
+       // try {
+            userService.createNewUser(firstName, lastName, login, password, role);
             return "redirect:/home";
-        } catch (Exception e) {
-            return "/login/errorsignup";
-        }
+        //} catch (Exception e) {
+            //return "/login/errorsignup";
+        //}
 
     }
 
@@ -85,7 +91,10 @@ public class UserController {
         User user1 = userService.findUserById(id);
         user1.setFirstName(firstName);
         user1.setLastName(lastName);
-        user1.setRole(role);
+        Set<Role> roles = new HashSet<>();
+
+        roles.add(new Role(role));
+        user1.setRoles(roles);
         userService.updateUser(user1);
         return "redirect:/admin/users";
     }
