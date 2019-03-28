@@ -46,7 +46,7 @@ public class DBConfig {
         Properties hibernateProp = new Properties();
         hibernateProp.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL95Dialect");
         hibernateProp.put("hibernate.show_sql", "true");
-        hibernateProp.put("hibernate.hbm2ddl.auto", "create-drop");
+        hibernateProp.put("hibernate.hbm2ddl.auto", "update");
         return hibernateProp;
     }
 

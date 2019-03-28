@@ -2,6 +2,8 @@ package ru.kurma.dao;
 
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kurma.model.Role;
@@ -17,6 +19,7 @@ public class UserDaoImpl implements UserDao {
     @Autowired
     @PersistenceContext
     private EntityManager entityManager;
+
 
     @Override
     public List<User> findAllUsers() {
@@ -36,7 +39,6 @@ public class UserDaoImpl implements UserDao {
         Query query = (Query) entityManager.createQuery("select e from User e where e.login = :login");
         query.setParameter("login", login);
         return (User) query.getSingleResult();
-
     }
 
     @Override

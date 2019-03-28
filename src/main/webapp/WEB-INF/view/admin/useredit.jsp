@@ -23,8 +23,8 @@
         <tr>
             <td><label for="Role">Текущая Роль</label></td>
             <td><select name="role" id="Role">
-                <option value="admin">admin</option>
-                <option value="user">user</option>
+                <option value="2">admin</option>
+                <option value="1">user</option>
             </select> </td>
         </tr>
         <tr>

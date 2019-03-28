@@ -2,19 +2,19 @@ package ru.kurma.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.kurma.dao.RoleDao;
 import ru.kurma.model.Role;
 import ru.kurma.model.User;
 import ru.kurma.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -25,14 +25,17 @@ public class UserController {
     private final UserService userService;
 
     @Autowired
+    private RoleDao roleDao;
+
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/")
-    public String getHomePage() {
-        return "redirect:/home";
-    }
+//    @GetMapping("/")
+//    public String getHomePage() {
+//        return "redirect:/home";
+//    }
 
     @GetMapping("/admin/users")
     public String viewAllUsers(Model model) {
@@ -41,7 +44,7 @@ public class UserController {
     }
 
     @GetMapping("/signup")
-    public String addUser(Authentication authentication) {
+    public String addUser() {
 //        if (authentication != null) {
 //            return "redirect:/";
 //        }
@@ -54,24 +57,20 @@ public class UserController {
                           @RequestParam String login,
                           @RequestParam String password) throws Exception {
 
-        Set<Role> role = new HashSet<>();
-        role.add(new Role("user"));
-       // try {
-            userService.createNewUser(firstName, lastName, login, password, role);
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleDao.findRoleById(1));
+        try {
+            userService.createNewUser(firstName, lastName, login, password, roles);
             return "redirect:/home";
-        //} catch (Exception e) {
-            //return "/login/errorsignup";
-        //}
-
+        } catch (Exception e) {
+            return "/login/errorsignup";
+        }
     }
 
     @GetMapping("/signin")
-    public String signIn(Authentication authentication, Model model, HttpServletRequest request) {
+    public String signIn(Model model, HttpServletRequest request) {
         if (request.getParameterMap().containsKey("error")) {
             model.addAttribute("error", true);
-        }
-        if (authentication != null) {
-            return "redirect:/";
         }
         return "/login/signin";
     }
@@ -91,9 +90,9 @@ public class UserController {
         User user1 = userService.findUserById(id);
         user1.setFirstName(firstName);
         user1.setLastName(lastName);
-        Set<Role> roles = new HashSet<>();
 
-        roles.add(new Role(role));
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleDao.findRoleById(Integer.parseInt(role)));
         user1.setRoles(roles);
         userService.updateUser(user1);
         return "redirect:/admin/users";
@@ -106,12 +105,7 @@ public class UserController {
     }
 
     @GetMapping("/home")
-    public String home(Authentication authentication) {
-
-        List<GrantedAuthority> autoritis = (List<GrantedAuthority>) authentication.getAuthorities();
-        if("admin".equals(autoritis.get(0).getAuthority())) {
-            return "redirect:/admin/adminhome";
-        }
+    public String home() {
         return "/user/home";
     }
 

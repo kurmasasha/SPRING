@@ -30,7 +30,7 @@ public class User implements UserDetails{
 
     @JoinTable(name = "user_role", schema = "test", joinColumns = @JoinColumn(name = "users_id")
             , inverseJoinColumns = @JoinColumn(name = "role_id") )
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     public User(Set<Role> roles) {
