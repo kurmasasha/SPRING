@@ -22,12 +22,12 @@ public class UserController {
 
     private final UserService userService;
 
-    @Autowired
-    private RoleDao roleDao;
+    private final RoleDao roleDao;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RoleDao roleDao) {
         this.userService = userService;
+        this.roleDao = roleDao;
     }
 
     @GetMapping("")
@@ -38,7 +38,7 @@ public class UserController {
     @GetMapping("/admin/users")
     public String viewAllUsers(Model model) {
         model.addAttribute("userList", userService.findAllUsers());
-        return "/admin/users";
+        return "admin/users";
     }
 
     @GetMapping("/signup")
@@ -53,7 +53,7 @@ public class UserController {
     public String signUp(@RequestParam String firstName,
                           @RequestParam String lastName,
                           @RequestParam String login,
-                          @RequestParam String password) throws Exception {
+                          @RequestParam String password) {
 
         Set<Role> roles = new HashSet<>();
         roles.add(roleDao.findRoleById(1));
@@ -74,11 +74,11 @@ public class UserController {
     }
 
     @GetMapping("/admin/edit")
-    public String userEdit(@RequestParam Integer id, Model uiModel) {
+    public String userEdit(@RequestParam Integer id, Model model) {
         this.id = id;
         User user = userService.findUserById(id);
-        uiModel.addAttribute("user", user);
-        return "/admin/useredit";
+        model.addAttribute("user", user);
+        return "admin/useredit";
     }
 
     @PostMapping("/admin/edit")

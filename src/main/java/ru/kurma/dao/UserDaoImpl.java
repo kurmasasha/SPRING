@@ -38,7 +38,8 @@ public class UserDaoImpl implements UserDao {
     public User findUserByLogin(String login) {
         Query query = (Query) entityManager.createQuery("select e from User e where e.login = :login");
         query.setParameter("login", login);
-        return (User) query.getSingleResult();
+        User user = (User) query.getSingleResult();
+        return user;
     }
 
     @Override

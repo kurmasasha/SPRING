@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Все пользователи</h1>
+
+<table>
+    <tbody>
+    <tr>
+        <td>ID</td>
+        <td>Имя</td>
+        <td>Фамилия</td>
+        <td>Логин</td>
+        <td>Роль</td>
+    </tr>
+    <tr th:each="user : ${userList}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.firstName}"></td>
+        <td th:text="${user.lastName}"></td>
+        <td th:text="${user.login}"></td>
+        <td th:each="role : ${user.roles}" th:text="${role.authority}">
+        </td>
+        <td>
+            <a th:href="@{/admin/edit(id=${user.id})}">Редактировать</a>
+        </td>
+        <td>
+            <a th:href="@{/admin/delete(id=${user.id})}">Удалить</a>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
