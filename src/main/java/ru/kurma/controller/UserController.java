@@ -1,7 +1,6 @@
 package ru.kurma.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,6 @@ import ru.kurma.model.User;
 import ru.kurma.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,10 +30,10 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping("/")
-//    public String getHomePage() {
-//        return "redirect:/home";
-//    }
+    @GetMapping("")
+    public String getHomePage() {
+        return "redirect:/home";
+    }
 
     @GetMapping("/admin/users")
     public String viewAllUsers(Model model) {
@@ -106,11 +104,7 @@ public class UserController {
 
     @GetMapping("/home")
     public String home() {
-        return "/user/home";
+        return "/home";
     }
 
-    @GetMapping("/admin/adminhome")
-    public String adminHome() {
-        return "/admin/adminhome";
-    }
 }

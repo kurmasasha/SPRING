@@ -30,10 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/signin", "signup").permitAll()
                     .antMatchers("/home").authenticated()
-                    .antMatchers("/admin/**").hasAuthority("admin")
+                    .antMatchers("/admin/*").hasAuthority("admin")
                     .anyRequest().permitAll()
                 .and()
-                    .formLogin().successHandler(successHandler)
+                    .formLogin()//.successHandler(successHandler)
                     .loginPage("/signin")
                     .usernameParameter("login");
                 http.csrf().disable();
