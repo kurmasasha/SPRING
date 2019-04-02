@@ -18,7 +18,7 @@ import java.util.Set;
 @Controller
 public class UserController {
 
-    private Integer id;
+    //private Integer id;
 
     private final UserService userService;
 
@@ -32,22 +32,20 @@ public class UserController {
 
     @GetMapping("")
     public String getHomePage() {
-        return "redirect:/home";
+        return "redirect:/signin";
     }
 
-    @GetMapping("/admin/users")
-    public String viewAllUsers(Model model) {
+    @GetMapping("/admin/**")
+    public String viewAdminPage(Model model) {
         model.addAttribute("userList", userService.findAllUsers());
-        return "admin/users";
+        return "admin";
     }
 
-    @GetMapping("/signup")
-    public String addUser() {
-//        if (authentication != null) {
-//            return "redirect:/";
-//        }
-        return "/login/signup";
+    @GetMapping("/user")
+    public String viewUserPage() {
+        return "user";
     }
+
 
     @PostMapping("/signup")
     public String signUp(@RequestParam String firstName,
@@ -59,7 +57,7 @@ public class UserController {
         roles.add(roleDao.findRoleById(1));
         try {
             userService.createNewUser(firstName, lastName, login, password, roles);
-            return "redirect:/home";
+            return "redirect:/admin";
         } catch (Exception e) {
             return "/login/errorsignup";
         }
@@ -68,24 +66,24 @@ public class UserController {
     @GetMapping("/signin")
     public String signIn(Model model, HttpServletRequest request) {
         if (request.getParameterMap().containsKey("error")) {
-            model.addAttribute("error", true);
+            model.addAttribute("er", true);
         }
         return "/login/signin";
     }
 
-    @GetMapping("/admin/edit")
-    public String userEdit(@RequestParam Integer id, Model model) {
-        this.id = id;
-        User user = userService.findUserById(id);
-        model.addAttribute("user", user);
-        return "admin/useredit";
-    }
+//    @GetMapping("/admin/edit")
+//    public String userEdit(@RequestParam Integer id, Model model) {
+//        this.id = id;
+//        User user = userService.findUserById(id);
+//        model.addAttribute("user", user);
+//        return "admin/useredit";
+//    }
 
     @PostMapping("/admin/edit")
-    public String userEdit(@RequestParam String firstName,
+    public String userEdit(@RequestParam String id, @RequestParam String firstName,
                            @RequestParam String lastName,
                            @RequestParam String role) {
-        User user1 = userService.findUserById(id);
+        User user1 = userService.findUserById(Integer.parseInt(id));
         user1.setFirstName(firstName);
         user1.setLastName(lastName);
 
@@ -93,18 +91,13 @@ public class UserController {
         roles.add(roleDao.findRoleById(Integer.parseInt(role)));
         user1.setRoles(roles);
         userService.updateUser(user1);
-        return "redirect:/admin/users";
+        return "redirect:/admin";
     }
 
     @GetMapping("/admin/delete")
     public String deleteUser(@RequestParam Integer id) {
         userService.deleteUser(id);
-        return "redirect:/admin/users";
-    }
-
-    @GetMapping("/home")
-    public String home() {
-        return "/home";
+        return "redirect:/admin";
     }
 
 }
