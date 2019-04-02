@@ -18,8 +18,6 @@ import java.util.Set;
 @Controller
 public class UserController {
 
-    //private Integer id;
-
     private final UserService userService;
 
     private final RoleDao roleDao;
@@ -41,7 +39,7 @@ public class UserController {
         return "admin";
     }
 
-    @GetMapping("/user")
+    @GetMapping("/user/**")
     public String viewUserPage() {
         return "user";
     }
@@ -71,14 +69,6 @@ public class UserController {
         return "/login/signin";
     }
 
-//    @GetMapping("/admin/edit")
-//    public String userEdit(@RequestParam Integer id, Model model) {
-//        this.id = id;
-//        User user = userService.findUserById(id);
-//        model.addAttribute("user", user);
-//        return "admin/useredit";
-//    }
-
     @PostMapping("/admin/edit")
     public String userEdit(@RequestParam String id, @RequestParam String firstName,
                            @RequestParam String lastName,
@@ -86,7 +76,6 @@ public class UserController {
         User user1 = userService.findUserById(Integer.parseInt(id));
         user1.setFirstName(firstName);
         user1.setLastName(lastName);
-
         Set<Role> roles = new HashSet<>();
         roles.add(roleDao.findRoleById(Integer.parseInt(role)));
         user1.setRoles(roles);
