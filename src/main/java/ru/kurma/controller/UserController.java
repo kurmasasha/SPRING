@@ -33,33 +33,33 @@ public class UserController {
         return "redirect:/signin";
     }
 
-    @GetMapping("/admin/**")
-    public String viewAdminPage(Model model) {
-        model.addAttribute("userList", userService.findAllUsers());
-        return "admin";
-    }
+//    @GetMapping("/admin/**")
+//    public String viewAdminPage(Model model) {
+//        model.addAttribute("userList", userService.findAllUsers());
+//        return "admin";
+//    }
 
-    @GetMapping("/user/**")
-    public String viewUserPage() {
-        return "user";
-    }
+//    @GetMapping("/user/**")
+//    public String viewUserPage() {
+//        return "user";
+//    }
 
 
-    @PostMapping("/signup")
-    public String signUp(@RequestParam String firstName,
-                          @RequestParam String lastName,
-                          @RequestParam String login,
-                          @RequestParam String password) {
-
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleDao.findRoleById(1));
-        try {
-            userService.createNewUser(firstName, lastName, login, password, roles);
-            return "redirect:/admin";
-        } catch (Exception e) {
-            return "/login/errorsignup";
-        }
-    }
+//    @PostMapping("/signup")
+//    public String signUp(@RequestParam String firstName,
+//                          @RequestParam String lastName,
+//                          @RequestParam String login,
+//                          @RequestParam String password) {
+//
+//        Set<Role> roles = new HashSet<>();
+//        roles.add(roleDao.findRoleById(1));
+//        try {
+//            userService.createNewUser(firstName, lastName, login, password, roles);
+//            return "redirect:/admin";
+//        } catch (Exception e) {
+//            return "/login/errorsignup";
+//        }
+//    }
 
     @GetMapping("/signin")
     public String signIn(Model model, HttpServletRequest request) {
@@ -69,24 +69,24 @@ public class UserController {
         return "/login/signin";
     }
 
-    @PostMapping("/admin/edit")
-    public String userEdit(@RequestParam String id, @RequestParam String firstName,
-                           @RequestParam String lastName,
-                           @RequestParam String role) {
-        User user1 = userService.findUserById(Integer.parseInt(id));
-        user1.setFirstName(firstName);
-        user1.setLastName(lastName);
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleDao.findRoleById(Integer.parseInt(role)));
-        user1.setRoles(roles);
-        userService.updateUser(user1);
-        return "redirect:/admin";
-    }
+//    @PostMapping("/admin/edit")
+//    public String userEdit(@RequestParam String id, @RequestParam String firstName,
+//                           @RequestParam String lastName,
+//                           @RequestParam String role) {
+//        User user1 = userService.findUserById(Integer.parseInt(id));
+//        user1.setFirstName(firstName);
+//        user1.setLastName(lastName);
+//        Set<Role> roles = new HashSet<>();
+//        roles.add(roleDao.findRoleById(Integer.parseInt(role)));
+//        user1.setRoles(roles);
+//        userService.updateUser(user1);
+//        return "redirect:/admin";
+//    }
 
-    @GetMapping("/admin/delete")
-    public String deleteUser(@RequestParam Integer id) {
-        userService.deleteUser(id);
-        return "redirect:/admin";
-    }
+//    @GetMapping("/admin/delete")
+//    public String deleteUser(@RequestParam Integer id) {
+//        userService.deleteUser(id);
+//        return "redirect:/admin";
+//    }
 
 }
