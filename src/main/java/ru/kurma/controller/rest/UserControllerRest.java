@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
+@RequestMapping("api")
 public class UserControllerRest {
 
     private final UserService userService;
@@ -26,17 +27,17 @@ public class UserControllerRest {
     }
 
 
-    @GetMapping("/admin")
+    @GetMapping("/user")
     public List<User> viewAdminPage() {
         return userService.findAllUsers();
     }
 
-    @GetMapping("admin/{id}")
+    @GetMapping("user/{id}")
     public User getUserById(@PathVariable String id) {
         return userService.findUserById(Integer.parseInt(id));
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/user")
     public User createNewUser(@RequestBody User user) throws Exception {
 
         Set<Role> roles = new HashSet<>();
@@ -49,13 +50,13 @@ public class UserControllerRest {
         return user;
     }
 
-    @PutMapping("admin/edit")
+    @PutMapping("/user")
     public User updateUser(@RequestBody User user) {
         userService.updateUser(user);
         return user;
     }
 
-    @DeleteMapping("admin/delete/{id}")
+    @DeleteMapping("/user/{id}")
     public void deleteUser(@PathVariable String id) {
         userService.deleteUser(Integer.parseInt(id));
     }
