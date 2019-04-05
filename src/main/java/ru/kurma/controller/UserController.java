@@ -57,7 +57,7 @@ public class UserController {
             userService.createNewUser(firstName, lastName, login, password, roles);
             return "redirect:/admin";
         } catch (Exception e) {
-            return "/login/errorsignup";
+            return "login/errorsignup";
         }
     }
 
@@ -66,7 +66,7 @@ public class UserController {
         if (request.getParameterMap().containsKey("error")) {
             model.addAttribute("er", true);
         }
-        return "/login/signin";
+        return "login/signin";
     }
 
     @PostMapping("/admin/edit")
