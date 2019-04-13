@@ -28,17 +28,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/signin", "signup").permitAll()
-                    .antMatchers("/user/**").authenticated()
-                    .antMatchers("/admin/**").hasAuthority("admin")
-                    .antMatchers("/css/**").permitAll()
-                    .anyRequest().permitAll()
-                .and()
-                    .formLogin().successHandler(successHandler)
-                    .loginPage("/signin")
-                    .usernameParameter("login");
-                http.csrf().disable();
+                .antMatchers("/", "/glogin", "/signin", "/login", "/css/**", "/error**").permitAll()
+                .antMatchers("/admin/**").hasAuthority("admin")
+                .anyRequest().authenticated()
+                    .and()
+                .formLogin().successHandler(successHandler)
+                .loginPage("/signin")
+                .usernameParameter("login")
+                    .and()
+                .logout().logoutSuccessUrl("/").permitAll()
+                    .and()
+                .csrf().disable();
     }
+
+
+
+//    @Bean
+//    public PrincipalExtractor principalExtractor(UserGooleRepository userGooleRepository) {
+//        return map -> {
+//            String id = (String) map.get("sub");
+//
+//            UserGoggle userGoggle = userGooleRepository.findById(id).orElseGet(() -> {
+//                UserGoggle newUserGoggle = new UserGoggle();
+//                newUserGoggle.setId(id);
+//                newUserGoggle.setName((String) map.get("name"));
+//                newUserGoggle.setEmail((String) map.get("email"));
+//                newUserGoggle.setUserpic((String) map.get("picture"));
+//                return newUserGoggle;
+//            });
+//            return userGooleRepository.save(userGoggle);
+//        };
+//    }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

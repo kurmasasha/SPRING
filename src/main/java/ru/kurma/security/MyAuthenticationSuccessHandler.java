@@ -15,7 +15,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest
             , HttpServletResponse httpServletResponse
-            , Authentication authentication) throws IOException, ServletException {
+            , Authentication authentication) throws IOException {
 
         boolean admin = false;
 
@@ -30,6 +30,5 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
         }else{
             httpServletResponse.sendRedirect("/user");
         }
-
     }
 }

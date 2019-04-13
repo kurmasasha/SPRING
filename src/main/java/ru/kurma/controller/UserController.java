@@ -1,5 +1,8 @@
 package ru.kurma.controller;
 
+import com.github.scribejava.apis.GoogleApi20;
+import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.oauth.OAuth20Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +15,7 @@ import ru.kurma.model.User;
 import ru.kurma.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class UserController {
@@ -28,10 +30,20 @@ public class UserController {
         this.roleDao = roleDao;
     }
 
-    @GetMapping("")
+
+    @GetMapping("/")
     public String getHomePage() {
         return "redirect:/signin";
     }
+
+    @GetMapping("/glogin")
+    public String dlogin() {
+
+
+        return "index";
+
+    }
+
 
     @GetMapping("/admin/**")
     public String viewAdminPage(Model model) {
@@ -50,7 +62,6 @@ public class UserController {
                           @RequestParam String lastName,
                           @RequestParam String login,
                           @RequestParam String password) {
-
         Set<Role> roles = new HashSet<>();
         roles.add(roleDao.findRoleById(1));
         try {
@@ -88,5 +99,4 @@ public class UserController {
         userService.deleteUser(id);
         return "redirect:/admin";
     }
-
 }
