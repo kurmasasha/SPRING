@@ -1,36 +1,58 @@
 package ru.kurma.model;
 
-public class User {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-    private int id;
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Set;
 
+@Entity
+@Table(name = "users", schema = "test")
+public class User implements UserDetails{
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "firstname")
     private String firstName;
 
+    @Column(name = "lastname")
     private String lastName;
 
+    @Column(name = "login", unique = true)
     private String login;
 
+    @Column(name = "password")
     private String password;
 
-    private String role;
+    @JoinTable(name = "user_role", schema = "test", joinColumns = @JoinColumn(name = "users_id")
+            , inverseJoinColumns = @JoinColumn(name = "role_id") )
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
+    private Set<Role> roles;
+
+    public User(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public User() {
     }
 
-    public User(int id, String firstName, String lastName, String login, String password, String role) {
-        this.id = id;
+    public User(String firstName, String lastName, String login, String password, Set<Role> role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
         this.password = password;
-        this.role = role;
+        this.roles = role;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -58,20 +80,50 @@ public class User {
         this.login = login;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override
@@ -82,7 +134,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }
