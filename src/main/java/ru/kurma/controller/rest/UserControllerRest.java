@@ -16,16 +16,13 @@ import java.util.Set;
 public class UserControllerRest {
 
     private final UserService userService;
-
     private final RoleDao roleDao;
-
 
     @Autowired
     public UserControllerRest(UserService userService, RoleDao roleDao) {
         this.userService = userService;
         this.roleDao = roleDao;
     }
-
 
     @GetMapping("/user")
     public List<User> viewAdminPage() {
@@ -39,7 +36,6 @@ public class UserControllerRest {
 
     @PostMapping("/user")
     public User createNewUser(@RequestBody User user) throws Exception {
-
         Set<Role> roles = new HashSet<>();
         roles.add(roleDao.findRoleById(1));
         userService.createNewUser(user.getFirstName(),

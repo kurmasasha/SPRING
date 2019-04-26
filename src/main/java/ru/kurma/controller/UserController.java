@@ -1,9 +1,7 @@
 package ru.kurma.controller;
 
-import com.github.scribejava.apis.GoogleApi20;
-import com.github.scribejava.core.builder.ServiceBuilder;
-import com.github.scribejava.core.oauth.OAuth20Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.kurma.dao.RoleDao;
 import ru.kurma.model.Role;
 import ru.kurma.model.User;
+import ru.kurma.service.AuthService;
 import ru.kurma.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class UserController {
@@ -24,12 +24,14 @@ public class UserController {
 
     private final RoleDao roleDao;
 
+    private final AuthService authService;
+
     @Autowired
-    public UserController(UserService userService, RoleDao roleDao) {
+    public UserController(UserService userService, RoleDao roleDao, AuthService authService) {
         this.userService = userService;
         this.roleDao = roleDao;
+        this.authService = authService;
     }
-
 
     @GetMapping("/")
     public String getHomePage() {
@@ -38,12 +40,14 @@ public class UserController {
 
     @GetMapping("/glogin")
     public String dlogin() {
-
-
-        return "index";
-
+        return "redirect:" +authService.buildUrl();
     }
 
+    @GetMapping("/auth")
+    public String auth(@RequestParam String code) {
+        authService.auth(code);
+        return "redirect:/admin";
+    }
 
     @GetMapping("/admin/**")
     public String viewAdminPage(Model model) {
@@ -52,10 +56,10 @@ public class UserController {
     }
 
     @GetMapping("/user/**")
-    public String viewUserPage() {
+    public String viewUserPage(Model model, Authentication authentication) {
+        model.addAttribute("name", authentication.getName());
         return "user";
     }
-
 
     @PostMapping("/signup")
     public String signUp(@RequestParam String firstName,
@@ -73,7 +77,7 @@ public class UserController {
     }
 
     @GetMapping("/signin")
-    public String signIn(Model model, HttpServletRequest request) {
+    public String signIn(Model model, HttpServletRequest request, Authentication authentication) {
         if (request.getParameterMap().containsKey("error")) {
             model.addAttribute("er", true);
         }

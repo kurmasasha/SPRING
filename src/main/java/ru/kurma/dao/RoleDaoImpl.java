@@ -14,7 +14,6 @@ public class RoleDaoImpl implements RoleDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-
     @Override
     public Role findRoleById(Integer id) {
         return entityManager.find(Role.class, id);

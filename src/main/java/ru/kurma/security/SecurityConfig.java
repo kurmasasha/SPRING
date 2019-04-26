@@ -1,6 +1,5 @@
 package ru.kurma.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,17 +17,20 @@ import ru.kurma.service.UserDetailsServiceImpl;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    private AuthenticationSuccessHandler successHandler;
+    private final AuthenticationSuccessHandler successHandler;
+
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, AuthenticationSuccessHandler successHandler) {
+        this.userDetailsService = userDetailsService;
+        this.successHandler = successHandler;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/glogin", "/signin", "/login", "/css/**", "/error**").permitAll()
+                .antMatchers("/", "/auth","/glogin", "/signin", "/login", "/css/**", "/error**").permitAll()
                 .antMatchers("/admin/**").hasAuthority("admin")
                 .anyRequest().authenticated()
                     .and()
@@ -40,26 +42,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .csrf().disable();
     }
-
-
-
-//    @Bean
-//    public PrincipalExtractor principalExtractor(UserGooleRepository userGooleRepository) {
-//        return map -> {
-//            String id = (String) map.get("sub");
-//
-//            UserGoggle userGoggle = userGooleRepository.findById(id).orElseGet(() -> {
-//                UserGoggle newUserGoggle = new UserGoggle();
-//                newUserGoggle.setId(id);
-//                newUserGoggle.setName((String) map.get("name"));
-//                newUserGoggle.setEmail((String) map.get("email"));
-//                newUserGoggle.setUserpic((String) map.get("picture"));
-//                return newUserGoggle;
-//            });
-//            return userGooleRepository.save(userGoggle);
-//        };
-//    }
-
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

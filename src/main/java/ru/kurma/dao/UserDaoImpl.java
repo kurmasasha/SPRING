@@ -20,7 +20,6 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-
     @Override
     public List<User> findAllUsers() {
         List<User> users;
@@ -52,7 +51,6 @@ public class UserDaoImpl implements UserDao {
     @Transactional
     public void updateUser(User user) {
         entityManager.merge(user);
-
     }
 
     @Override
