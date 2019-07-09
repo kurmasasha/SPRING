@@ -1,6 +1,7 @@
 package ru.kurma.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,13 +25,19 @@ public class UserController {
 
     private final RoleDao roleDao;
 
-    private final AuthService authService;
+    private final AuthService authServiceGoogle;
+
+    private final AuthService authServiceVk;
 
     @Autowired
-    public UserController(UserService userService, RoleDao roleDao, AuthService authService) {
+    public UserController(UserService userService,
+                          RoleDao roleDao,
+                          @Qualifier("authServiceGoogle") AuthService authServiceGoogle,
+                          @Qualifier("authServiceVk") AuthService authServiceVk) {
         this.userService = userService;
         this.roleDao = roleDao;
-        this.authService = authService;
+        this.authServiceGoogle = authServiceGoogle;
+        this.authServiceVk = authServiceVk;
     }
 
     @GetMapping("/")
@@ -40,12 +47,12 @@ public class UserController {
 
     @GetMapping("/glogin")
     public String dlogin() {
-        return "redirect:" +authService.buildUrl();
+        return "redirect:" +authServiceGoogle.buildUrl();
     }
 
     @GetMapping("/auth")
     public String auth(@RequestParam String code) {
-        authService.auth(code);
+        authServiceGoogle.auth(code);
         return "redirect:/admin";
     }
 
