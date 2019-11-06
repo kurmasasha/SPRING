@@ -30,13 +30,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByLogin(String login) {
-        return userDao.findUserByLogin(login);
+    public User findUserByUserName(String login) {
+        return userDao.findUserByUserName(login);
     }
 
     @Override
-    public void createNewUser(String firstName, String lastName, String login, String password, Set<Role> role) throws Exception {
-        userDao.createNewUser(firstName, lastName, login, password, role);
+    public void createNewUser(String firstName, String lastName, String username, String password, Set<Role> role) throws Exception {
+        userDao.createNewUser(firstName, lastName, username, password, role);
     }
 
     @Override

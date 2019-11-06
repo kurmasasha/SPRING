@@ -22,8 +22,8 @@ public class User implements UserDetails{
     @Column(name = "lastname")
     private String lastName;
 
-    @Column(name = "login", unique = true)
-    private String login;
+    @Column(name = "username", unique = true)
+    private String username;
 
     @Column(name = "password")
     private String password;
@@ -40,10 +40,10 @@ public class User implements UserDetails{
     public User() {
     }
 
-    public User(String firstName, String lastName, String login, String password, Set<Role> role) {
+    public User(String firstName, String lastName, String username, String password, Set<Role> role) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.login = login;
+        this.username = username;
         this.password = password;
         this.roles = role;
     }
@@ -72,12 +72,13 @@ public class User implements UserDetails{
         this.lastName = lastName;
     }
 
-    public String getLogin() {
-        return login;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -89,9 +90,8 @@ public class User implements UserDetails{
         return password;
     }
 
-    @Override
-    public String getUsername() {
-        return login;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -114,9 +114,6 @@ public class User implements UserDetails{
         return true;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public Set<Role> getRoles() {
         return roles;
@@ -132,7 +129,7 @@ public class User implements UserDetails{
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", login='" + login + '\'' +
+                ", login='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", roles=" + roles +
                 '}';

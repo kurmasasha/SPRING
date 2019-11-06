@@ -27,7 +27,7 @@
     <div class="row">
         <div th:replace="fragments/nav-side-bar :: sidebar"></div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1><div th:text="'Hello '+ ${name}"></div></h1>
+            <h1><div th:text="'Hello '+ ${name.firstName}"></div></h1>
         </div>
     </div>
 </div>
