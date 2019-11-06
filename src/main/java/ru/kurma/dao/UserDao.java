@@ -10,7 +10,7 @@ public interface  UserDao {
 
     List<User> findAllUsers();
     User findUserById(Integer id);
-    User findUserByLogin(String login);
+    User findUserByUserName(String login);
     void createNewUser(String firstName, String lastName, String login, String password, Set<Role> role) throws Exception;
     void updateUser(User user);
     void deleteUser(Integer id);

@@ -40,7 +40,7 @@ public class UserControllerRest {
         roles.add(roleDao.findRoleById(1));
         userService.createNewUser(user.getFirstName(),
                 user.getLastName(),
-                user.getLogin(),
+                user.getUsername(),
                 user.getPassword(),
                 roles);
         return user;

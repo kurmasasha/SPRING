@@ -64,7 +64,7 @@ public class UserController {
 
     @GetMapping("/user/**")
     public String viewUserPage(Model model, Authentication authentication) {
-        model.addAttribute("name", authentication.getName());
+        model.addAttribute("name", authentication.getPrincipal());
         return "user";
     }
 

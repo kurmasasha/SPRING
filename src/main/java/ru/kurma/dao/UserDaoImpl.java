@@ -2,12 +2,11 @@ package ru.kurma.dao;
 
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kurma.model.Role;
 import ru.kurma.model.User;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -16,9 +15,13 @@ import java.util.Set;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    @Autowired
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
+
+    @Autowired
+    public UserDaoImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     @Override
     public List<User> findAllUsers() {
@@ -34,17 +37,17 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findUserByLogin(String login) {
-        Query query = (Query) entityManager.createQuery("select e from User e where e.login = :login");
-        query.setParameter("login", login);
+    public User findUserByUserName(String username) {
+        Query query = (Query) entityManager.createQuery("select e from User e where e.username = :username");
+        query.setParameter("username", username);
         User user = (User) query.getSingleResult();
         return user;
     }
 
     @Override
     @Transactional
-    public void createNewUser(String firstName, String lastName, String login, String password, Set<Role> role) {
-        entityManager.persist(new User(firstName, lastName, login, password, role));
+    public void createNewUser(String firstName, String lastName, String username, String password, Set<Role> role) {
+        entityManager.persist(new User(firstName, lastName, username, password, role));
     }
 
     @Override
