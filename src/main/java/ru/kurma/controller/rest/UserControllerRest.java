@@ -1,6 +1,7 @@
 package ru.kurma.controller.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.kurma.dao.RoleDao;
 import ru.kurma.model.Role;
@@ -24,6 +25,7 @@ public class UserControllerRest {
         this.roleDao = roleDao;
     }
 
+    @PreAuthorize("hasAuthority('admin')")
     @GetMapping("/user")
     public List<User> viewAdminPage() {
         return userService.findAllUsers();
