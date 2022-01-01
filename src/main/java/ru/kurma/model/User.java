@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", schema = "test")
-public class User implements UserDetails{
+@Table(name = "users")
+public class User implements UserDetails {
 
     @Id
     @Column(name = "id")
@@ -28,7 +28,7 @@ public class User implements UserDetails{
     @Column(name = "password")
     private String password;
 
-    @JoinTable(name = "user_role", schema = "test", joinColumns = @JoinColumn(name = "users_id")
+    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "users_id")
             , inverseJoinColumns = @JoinColumn(name = "role_id") )
     @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     private Set<Role> roles;

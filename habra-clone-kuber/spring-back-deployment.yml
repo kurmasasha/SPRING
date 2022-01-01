@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-back
+  labels:
+    app: spring-back
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: spring-back
+      labels:
+        app: spring-back
+    spec:
+      containers:
+        - name: spring-back
+          image: kurmasasha/spring-image-m1:v5
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: spring-config-map
+                  key: spring-db-url
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: spring-secret
+                  key: spring-db-username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: spring-secret
+                  key: spring-db-password
+
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: spring-back
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-back-service
+spec:
+  selector:
+    app: spring-back-service
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: NodePort

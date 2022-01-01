@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-db
+  labels:
+    app: spring-db
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: spring-db
+      labels:
+        app: spring-db
+    spec:
+      containers:
+        - name: spring-db
+          image: postgres
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: testdb
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: spring-secret
+                  key: spring-db-username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: spring-secret
+                  key: spring-db-password
+
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: spring-db
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-db-service
+spec:
+  selector:
+    app: spring-db
+  ports:
+    - port: 5432
+      targetPort: 5432

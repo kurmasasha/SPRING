@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: spring-back-ingress
+spec:
+  rules:
+    - host: kurma-spring.com
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+              service:
+                name: spring-back-service
+                port:
+                  number: 80
