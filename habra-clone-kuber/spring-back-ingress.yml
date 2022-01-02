@@ -7,7 +7,7 @@ spec:
     - host: kurma-spring.com
       http:
         paths:
-        - path: /
+        - path: /v1
           pathType: Prefix
           backend:
               service:
