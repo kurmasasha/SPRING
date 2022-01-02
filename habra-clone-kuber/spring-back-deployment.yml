@@ -6,6 +6,9 @@ metadata:
     app: spring-back
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: spring-back
   template:
     metadata:
       name: spring-back
@@ -14,7 +17,7 @@ spec:
     spec:
       containers:
         - name: spring-back
-          image: kurmasasha/spring-image-m1:v5
+          image: kurmasasha/spring-amd64:v1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -35,21 +38,17 @@ spec:
                   name: spring-secret
                   key: spring-db-password
 
-      restartPolicy: Always
-  selector:
-    matchLabels:
-      app: spring-back
-
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: spring-back-service
+  name: spring-back
 spec:
-  selector:
-    app: spring-back-service
-  ports:
-    - port: 8080
-      targetPort: 8080
   type: NodePort
+  selector:
+    app: spring-back
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

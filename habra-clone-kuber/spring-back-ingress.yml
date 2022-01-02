@@ -2,15 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: spring-back-ingress
+#  annotations:
+#    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   rules:
     - host: kurma-spring.com
       http:
         paths:
-        - path: /v1
+        - path: /
           pathType: Prefix
           backend:
               service:
-                name: spring-back-service
+                name: spring-back
                 port:
-                  number: 80
+                  number: 8080
